@@ -1,7 +1,7 @@
 [project]
 name = "happy_kostadin"
 dynamic = ["version"]
-dependencies = ["setuptools>=62", "tomli>=1.1.0; python_version < '3.11'"]
+dependencies = ["setuptools>=62", "tqdm>=4.66.1"]
 readme = "README.md"
 keywords = ["crlf", "lf", "line-ending", "checker"]
 license = { text = "MIT" }

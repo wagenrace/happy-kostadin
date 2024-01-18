@@ -23,10 +23,10 @@ def __get_arguments() -> Path:
     return path
 
 
-def main():
+def main() -> list:
     path = __get_arguments()
 
-    logging.info(f"checking for CRLF in {path}")
+    print(f"checking for CRLF in {path}")
 
     all_files = [file for file in path.glob("*") if file.is_file()]
 

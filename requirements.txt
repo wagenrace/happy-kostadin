@@ -1,2 +1,0 @@
-setuptools>=62
-tqdm>=4.66.1
