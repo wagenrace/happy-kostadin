@@ -1,9 +1,34 @@
 import argparse
-import logging
+import os
+import sys
 from pathlib import Path
+from typing import TYPE_CHECKING, Dict, Any
 
 from tqdm import tqdm
-import os
+
+if sys.version_info >= (3, 11):
+    try:
+        import tomllib
+    except ImportError:
+        # Help users on older alphas
+        if not TYPE_CHECKING:
+            import tomli as tomllib
+else:
+    import tomli as tomllib
+
+
+def parse_pyproject_toml() -> Dict[str, Any]:
+    """Parse a pyproject toml file, pulling out relevant parts for Black.
+
+    If parsing fails, will raise a tomllib.TOMLDecodeError.
+    """
+    path_pyproject_toml = Path.cwd() / "pyproject.toml"
+    with open(path_pyproject_toml, "rb") as f:
+        pyproject_toml = tomllib.load(f)
+    config: Dict[str, Any] = pyproject_toml.get("tool", {}).get("happy_kostadin", {})
+    config = {k.replace("--", "").replace("-", "_"): v for k, v in config.items()}
+
+    return config
 
 
 def __get_arguments() -> Path:
@@ -26,14 +51,18 @@ def __get_arguments() -> Path:
 
 def main() -> list:
     path = __get_arguments()
-
+    config = parse_pyproject_toml()
+    allowed_post_fixes = tuple(config.get("allowed_post_fixes", []))
     print(f"checking for CRLF in {path}")
 
     all_files = []
     for root, _, files in os.walk(path):
         for file in files:
-            file_path = Path(os.path.join(root, file))
-            all_files.append(file_path)
+            file_path = os.path.join(root, file)
+            if len(allowed_post_fixes) > 0:
+                if not file_path.endswith(allowed_post_fixes):
+                    continue
+            all_files.append(Path(file_path))
 
     # Usage example
     files_containing_crlf = []
