@@ -1,5 +1,8 @@
 import argparse
+import logging
 from pathlib import Path
+
+from tqdm import tqdm
 
 
 def __get_arguments() -> Path:
@@ -16,14 +19,30 @@ def __get_arguments() -> Path:
     )
     args = parser.parse_args()
     config = vars(args)
-    path = config["path"]
+    path = Path(config["path"]).absolute()
     return path
 
 
 def main():
     path = __get_arguments()
 
-    print(path)
+    logging.info(f"checking for CRLF in {path}")
+
+    all_files = [file for file in path.glob("*") if file.is_file()]
+
+    # Usage example
+    files_containing_crlf = []
+    for file in tqdm(all_files):
+        content = file.read_bytes()
+        if b"\r\n" in content:
+            files_containing_crlf.append(file)
+
+    if files_containing_crlf:
+        raise ValueError(f"{files_containing_crlf} contains CRLF line ending.")
+    else:
+        print("✨✨ - All files are free from CRLF - ✨✨")
+
+    return all_files
 
 
 if __name__ == "__main__":
