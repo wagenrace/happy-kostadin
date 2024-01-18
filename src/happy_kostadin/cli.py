@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 
 from tqdm import tqdm
+import os
 
 
 def __get_arguments() -> Path:
@@ -28,12 +29,16 @@ def main() -> list:
 
     print(f"checking for CRLF in {path}")
 
-    all_files = [file for file in path.glob("*") if file.is_file()]
+    all_files = []
+    for root, _, files in os.walk(path):
+        for file in files:
+            file_path = Path(os.path.join(root, file))
+            all_files.append(file_path)
 
     # Usage example
     files_containing_crlf = []
     for file in tqdm(all_files):
-        content = file.read_bytes()
+        content = open(file, "rb").read()
         if b"\r\n" in content:
             files_containing_crlf.append(file)
 

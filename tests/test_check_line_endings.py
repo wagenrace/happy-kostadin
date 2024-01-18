@@ -26,7 +26,7 @@ def test_all_crlf(argparse_mock):
 
 
 @patch("happy_kostadin.cli.__get_arguments")
-def test_all_mix(argparse_mock):
+def test_all_submodule(argparse_mock):
     argparse_mock.return_value = Path(__file__).absolute().parent / Path(
         "test_data_mix"
     )
