@@ -23,6 +23,8 @@ def parse_pyproject_toml() -> Dict[str, Any]:
     If parsing fails, will raise a tomllib.TOMLDecodeError.
     """
     path_pyproject_toml = Path.cwd() / "pyproject.toml"
+    if not path_pyproject_toml.exists():
+        return {}
     with open(path_pyproject_toml, "rb") as f:
         pyproject_toml = tomllib.load(f)
     config: Dict[str, Any] = pyproject_toml.get("tool", {}).get("happy_kostadin", {})
