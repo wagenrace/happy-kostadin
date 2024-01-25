@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Any
+from typing import TYPE_CHECKING, Dict, Any, Union
 
 from tqdm import tqdm
 
@@ -51,7 +51,7 @@ def __get_arguments() -> Path:
     return path
 
 
-def main() -> list:
+def main(return_checked_files: bool = False) -> Union[list, None]:
     path = __get_arguments()
     config = parse_pyproject_toml()
     allowed_post_fixes = tuple(config.get("allowed_post_fixes", []))
@@ -78,7 +78,8 @@ def main() -> list:
     else:
         print("✨✨ - All files are free from CRLF - ✨✨")
 
-    return all_files
+    if return_checked_files:
+        return all_files
 
 
 if __name__ == "__main__":
