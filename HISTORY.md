@@ -1,5 +1,8 @@
 # History
 
+## 0.0.5 (2024-01-25)
+- Stop printing all files
+
 ## 0.0.4 (2024-01-19)
 - Add check if pyproject exist
 

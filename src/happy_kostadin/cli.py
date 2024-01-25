@@ -52,6 +52,14 @@ def __get_arguments() -> Path:
 
 
 def main(return_checked_files: bool = False) -> Union[list, None]:
+    """Will raise a ValueError if any of the files contain CRLF line endings.
+
+    :param return_checked_files: Return all the files tested, defaults to False
+    :type return_checked_files: bool, optional
+    :raises ValueError: If any of the files contain CRLF line endings
+    :return: all the files that are checked or None
+    :rtype: Union[list, None]
+    """
     path = __get_arguments()
     config = parse_pyproject_toml()
     allowed_post_fixes = tuple(config.get("allowed_post_fixes", []))
