@@ -1,6 +1,42 @@
 # Happy Kostadin
 
-Find out if LF or CRLF is used.
+If you have files with CRLF line endings it can create problems. 
+
+## Install
+
+```bash
+pip install happy-kostadin
+```
+
+## Using
+
+Happy_kostadin is a CLI tool. Navigate to the project you want to check and run the following:
+
+```bash
+happy_kostadin
+```
+
+If you want to specify a path you can use the `-p` flag.
+
+```bash
+happy_kostadin -p your\path\here
+```
+
+### Select what files to include
+
+happy_kostadin uses the `pyproject.toml` in the folder it ran from.
+If in there there is the following it will only look for files ending the allowed post-fixes.
+
+```toml
+[tool.happy_kostadin]
+allowed-post-fixes = [
+  ".py",
+  ".md",
+  ".gitignore",
+]
+```
+
+If this not present all files will scanned.
 
 # Credits
 
