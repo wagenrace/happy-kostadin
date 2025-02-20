@@ -95,7 +95,7 @@ def main(return_checked_files: bool = False) -> Union[list, None]:
     if files_containing_crlf:
         raise ValueError(f"{files_containing_crlf} contains CRLF line ending.")
     else:
-        print("✨✨ - All files are free from CRLF - ✨✨")
+        print("+=+=+ - All files are free from CRLF - +=+=+")
 
     if return_checked_files:
         return all_files
