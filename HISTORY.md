@@ -1,5 +1,10 @@
 # History
 
+## 0.0.6 (2025-02-20)
+- Update minimum python requirement to =>3.9, <=3.13
+- Make it possible to add path with flag. So `happy_kostadin path/to/code` will now work
+- bugfix: Some systems have trouble with emoticon so they are removed from the print statement
+
 ## 0.0.5 (2024-01-25)
 - Stop printing all files
 
