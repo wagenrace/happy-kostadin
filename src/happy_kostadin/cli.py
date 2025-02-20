@@ -39,15 +39,26 @@ def __get_arguments() -> Path:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "dominant_path",
+        type=str,
+        help="Get the path to the files you want to check for line endings",
+        nargs="?",
+        default="",
+    )
+    parser.add_argument(
         "-p",
         "--path",
         type=str,
-        help="Get the path to the files you want to check for line endings",
         default="",
     )
     args = parser.parse_args()
     config = vars(args)
-    path = Path(config["path"]).absolute()
+    if config.get("dominant_path"):
+        path = Path(config["dominant_path"]).absolute()
+    elif config.get("path"):
+        path = Path(config["path"]).absolute()
+    else:
+        path = Path.cwd().absolute()
     return path
 
 
