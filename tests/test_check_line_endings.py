@@ -27,8 +27,9 @@ def test_all_crlf(toml_load_mock, argparse_mock):
         "test_data_crlf"
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(SystemExit) as excinfo:
         main()
+    assert excinfo.value.code == 1
 
 
 @patch("happy_kostadin.cli.__get_arguments")
@@ -39,8 +40,9 @@ def test_all_submodule(toml_load_mock, argparse_mock):
         "test_data_mix"
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(SystemExit) as excinfo:
         main()
+    assert excinfo.value.code == 1
 
 
 @patch("happy_kostadin.cli.__get_arguments")
