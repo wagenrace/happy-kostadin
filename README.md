@@ -16,10 +16,17 @@ Happy_kostadin is a CLI tool. Navigate to the project you want to check and run 
 happy_kostadin
 ```
 
-If you want to specify a path you can use the `-p` flag.
+If you want to specify a path you can specify it
+
+```bash
+happy_kostadin your\path\here
+```
+
+For legacy reasons you can also do this with the `-p` and `--path` flag.
 
 ```bash
 happy_kostadin -p your\path\here
+happy_kostadin --path your\path\here
 ```
 
 ### Select what files to include

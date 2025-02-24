@@ -10,6 +10,7 @@ Before submitting/accepting this Pull Request, please make sure:
 - [ ] Version number is updated
 - [ ] `HISTORY.rst` is updated
 - [ ] New feature is added to `README.md` subsection `Features`
+- [ ] Check if the minimum version of Python needs updating from [Python Status](https://devguide.python.org/versions/)
 
 ## Reviewer
 
@@ -20,3 +21,4 @@ Before submitting/accepting this Pull Request, please make sure:
 - [ ] Version number is updated
 - [ ] `HISTORY.rst` is updated
 - [ ] New feature is added to `README.md` subsection `Features`
+- [ ] Check if the minimum version of Python needs updating from [Python Status](https://devguide.python.org/versions/)

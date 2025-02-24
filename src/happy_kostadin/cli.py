@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Any, Union
+from typing import TYPE_CHECKING, Any, Dict, Union
 
 from tqdm import tqdm
 
@@ -39,15 +39,26 @@ def __get_arguments() -> Path:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "dominant_path",
+        type=str,
+        help="Get the path to the files you want to check for line endings",
+        nargs="?",
+        default="",
+    )
+    parser.add_argument(
         "-p",
         "--path",
         type=str,
-        help="Get the path to the files you want to check for line endings",
         default="",
     )
     args = parser.parse_args()
     config = vars(args)
-    path = Path(config["path"]).absolute()
+    if config.get("dominant_path"):
+        path = Path(config["dominant_path"]).absolute()
+    elif config.get("path"):
+        path = Path(config["path"]).absolute()
+    else:
+        path = Path.cwd().absolute()
     return path
 
 
@@ -79,12 +90,16 @@ def main(return_checked_files: bool = False) -> Union[list, None]:
     for file in tqdm(all_files):
         content = open(file, "rb").read()
         if b"\r\n" in content:
-            files_containing_crlf.append(file)
+            file_name = str(file).replace(str(path), "")
+            files_containing_crlf.append(file_name)
 
     if files_containing_crlf:
-        raise ValueError(f"{files_containing_crlf} contains CRLF line ending.")
+        for file in files_containing_crlf:
+            print(f"Error: {file} contains CRLF line ending.")
+        print(f"Error: {len(files_containing_crlf)} files contain CRLF line ending.")
+        sys.exit(1)
     else:
-        print("✨✨ - All files are free from CRLF - ✨✨")
+        print("+=+=+ - All files are free from CRLF - +=+=+")
 
     if return_checked_files:
         return all_files
