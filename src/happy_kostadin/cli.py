@@ -19,11 +19,9 @@ def get_all_files(config: Config) -> list:
             all_files.append(Path(file_path))
     return all_files
 
-def main(return_checked_files: bool = False) -> Union[list, None]:
+def main() -> Union[list, None]:
     """Will raise a ValueError if any of the files contain CRLF line endings.
 
-    :param return_checked_files: Return all the files tested, defaults to False
-    :type return_checked_files: bool, optional
     :raises ValueError: If any of the files contain CRLF line endings
     :return: all the files that are checked or None
     :rtype: Union[list, None]
@@ -48,9 +46,6 @@ def main(return_checked_files: bool = False) -> Union[list, None]:
         sys.exit(1)
     else:
         print("+=+=+ - All files are free from CRLF - +=+=+")
-
-    if return_checked_files:
-        return all_files
 
 
 if __name__ == "__main__":
