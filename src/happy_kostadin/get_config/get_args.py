@@ -30,8 +30,7 @@ def get_arguments() -> Args:
     parser.add_argument(
         "-f",
         "--fix",
-        type=bool,
-        default=False,
+        action='store_true'
     )
     args = parser.parse_args()
     config = vars(args)
