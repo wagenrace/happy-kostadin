@@ -36,8 +36,14 @@ def main() -> Union[list, None]:
     for file in tqdm(all_files):
         content = open(file, "rb").read()
         if b"\r\n" in content:
-            file_name = str(file).replace(str(config.path), "")
-            files_containing_crlf.append(file_name)
+            if config.fix:
+                content = content.replace(b"\r\n", b"\n")
+                with open(file, "wb") as f:
+                    f.write(content)
+                continue
+            else:
+                file_name = str(file).replace(str(config.path), "")
+                files_containing_crlf.append(file_name)
 
     if files_containing_crlf:
         for file in files_containing_crlf:
