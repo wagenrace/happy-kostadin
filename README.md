@@ -8,7 +8,7 @@ If you have files with CRLF line endings it can create problems.
 pip install happy-kostadin
 ```
 
-## Using
+## Use as check
 
 Happy_kostadin is a CLI tool. Navigate to the project you want to check and run the following:
 
@@ -27,6 +27,14 @@ For legacy reasons you can also do this with the `-p` and `--path` flag.
 ```bash
 happy_kostadin -p your\path\here
 happy_kostadin --path your\path\here
+```
+
+## Use as formatter
+
+Happy_kostadin can also be used as formatter with the flag `-f` or `--fix`
+
+```bash
+happy_kostadin your\path\here --fix
 ```
 
 ### Select what files to include
