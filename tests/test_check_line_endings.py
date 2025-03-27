@@ -1,30 +1,30 @@
-import pytest
-from happy_kostadin.cli import main
-from unittest.mock import patch
 from pathlib import Path
+from unittest.mock import patch
+
+import pytest
+
+from src.happy_kostadin.cli import main
+from src.happy_kostadin.get_config.get_config import Config
 
 
-@patch("happy_kostadin.cli.__get_arguments")
-@patch("happy_kostadin.cli.tomllib.load")
-def test_all_lf(toml_load_mock, argparse_mock):
-    toml_load_mock.return_value = {}
-    argparse_mock.return_value = Path(__file__).absolute().parent / Path("test_data_lf")
-
-    all_files = main(return_checked_files=True)
-    assert set(all_files) == set(
-        [
-            Path(__file__).absolute().parent / Path("test_data_lf/file_lf.txt"),
-            Path(__file__).absolute().parent / Path("test_data_lf/file_lf2.txt"),
-        ]
+@patch("src.happy_kostadin.cli.get_config")
+def test_all_lf(get_config_mock):
+    get_config_mock.return_value = Config(
+        path=Path(__file__).absolute().parent / Path("test_data_lf"),
+        allowed_post_fixes=[],
     )
 
+    try:
+        main()
+    except SystemExit as excinfo:
+        pytest.fail(f"SystemExit was raised with code {excinfo.code}")
 
-@patch("happy_kostadin.cli.__get_arguments")
-@patch("happy_kostadin.cli.tomllib.load")
-def test_all_crlf(toml_load_mock, argparse_mock):
-    toml_load_mock.return_value = {}
-    argparse_mock.return_value = Path(__file__).absolute().parent / Path(
-        "test_data_crlf"
+
+@patch("src.happy_kostadin.cli.get_config")
+def test_all_crlf(get_config_mock):
+    get_config_mock.return_value = Config(
+        path=Path(__file__).absolute().parent / Path("test_data_crlf"),
+        allowed_post_fixes=[],
     )
 
     with pytest.raises(SystemExit) as excinfo:
@@ -32,12 +32,11 @@ def test_all_crlf(toml_load_mock, argparse_mock):
     assert excinfo.value.code == 1
 
 
-@patch("happy_kostadin.cli.__get_arguments")
-@patch("happy_kostadin.cli.tomllib.load")
-def test_all_submodule(toml_load_mock, argparse_mock):
-    toml_load_mock.return_value = {}
-    argparse_mock.return_value = Path(__file__).absolute().parent / Path(
-        "test_data_mix"
+@patch("src.happy_kostadin.cli.get_config")
+def test_all_crlf_only_txt(get_config_mock):
+    get_config_mock.return_value = Config(
+        path=Path(__file__).absolute().parent / Path("test_data_crlf"),
+        allowed_post_fixes=["txt"],
     )
 
     with pytest.raises(SystemExit) as excinfo:
@@ -45,31 +44,50 @@ def test_all_submodule(toml_load_mock, argparse_mock):
     assert excinfo.value.code == 1
 
 
-@patch("happy_kostadin.cli.__get_arguments")
-@patch("happy_kostadin.cli.tomllib.load")
-def test_only_check_txt(toml_load_mock, argparse_mock):
-    toml_load_mock.return_value = {
-        "tool": {"happy_kostadin": {"allowed_post_fixes": ["txt"]}}
-    }
-    argparse_mock.return_value = Path(__file__).absolute().parent / Path(
-        "test_data_mix"
+@patch("src.happy_kostadin.cli.get_config")
+def test_mix_crlf(get_config_mock):
+    get_config_mock.return_value = Config(
+        path=Path(__file__).absolute().parent / Path("test_data_mix"),
+        allowed_post_fixes=[],
     )
 
-    all_files = main(return_checked_files=True)
-    assert all_files == [
-        Path(__file__).absolute().parent / Path("test_data_mix/file_lf.txt"),
-    ]
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+    assert excinfo.value.code == 1
 
 
-@patch("happy_kostadin.cli.__get_arguments")
-@patch("happy_kostadin.cli.tomllib.load")
-def test_do_not_return_by_default(toml_load_mock, argparse_mock):
-    toml_load_mock.return_value = {
-        "tool": {"happy_kostadin": {"allowed_post_fixes": ["txt"]}}
-    }
-    argparse_mock.return_value = Path(__file__).absolute().parent / Path(
-        "test_data_mix"
+@patch("src.happy_kostadin.cli.get_config")
+def test_mix_crlf_only_tom(get_config_mock):
+    get_config_mock.return_value = Config(
+        path=Path(__file__).absolute().parent / Path("test_data_mix"),
+        allowed_post_fixes=["tom"],
     )
 
-    all_files = main()
-    assert all_files == None
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+    assert excinfo.value.code == 1
+
+
+@patch("src.happy_kostadin.cli.get_config")
+def test_mix_crlf_only_tom_and_txt(get_config_mock):
+    get_config_mock.return_value = Config(
+        path=Path(__file__).absolute().parent / Path("test_data_mix"),
+        allowed_post_fixes=["tom", "txt"],
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+    assert excinfo.value.code == 1
+
+
+@patch("src.happy_kostadin.cli.get_config")
+def test_mix_crlf_only_txt(get_config_mock):
+    get_config_mock.return_value = Config(
+        path=Path(__file__).absolute().parent / Path("test_data_mix"),
+        allowed_post_fixes=["txt"],
+    )
+
+    try:
+        main()
+    except SystemExit as excinfo:
+        pytest.fail(f"SystemExit was raised with code {excinfo.code}")
