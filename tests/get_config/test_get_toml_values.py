@@ -1,8 +1,11 @@
 from unittest import mock
+
 import pytest
+import tomllib
+
 from src.happy_kostadin.get_config.get_toml_values import (
-    parse_pyproject_toml,
     TomlValues,
+    parse_pyproject_toml,
 )
 
 
@@ -68,5 +71,5 @@ def test_parse_pyproject_toml_invalid_toml(mock_pyproject_toml):
         """
     )
     with mock.patch("pathlib.Path.cwd", return_value=mock_pyproject_toml.parent):
-        with pytest.raises(Exception):
+        with pytest.raises(tomllib.TOMLDecodeError):
             parse_pyproject_toml()
