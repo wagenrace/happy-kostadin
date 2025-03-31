@@ -1,97 +1,52 @@
-import argparse
 import os
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, Union
 
 from tqdm import tqdm
 
-if sys.version_info >= (3, 11):
-    try:
-        import tomllib
-    except ImportError:
-        # Help users on older alphas
-        if not TYPE_CHECKING:
-            import tomli as tomllib
-else:
-    import tomli as tomllib
+from .get_config.get_config import Config, get_config
 
 
-def parse_pyproject_toml() -> Dict[str, Any]:
-    """Parse a pyproject toml file, pulling out relevant parts for Black.
-
-    If parsing fails, will raise a tomllib.TOMLDecodeError.
-    """
-    path_pyproject_toml = Path.cwd() / "pyproject.toml"
-    if not path_pyproject_toml.exists():
-        return {}
-    with open(path_pyproject_toml, "rb") as f:
-        pyproject_toml = tomllib.load(f)
-    config: Dict[str, Any] = pyproject_toml.get("tool", {}).get("happy_kostadin", {})
-    config = {k.replace("--", "").replace("-", "_"): v for k, v in config.items()}
-
-    return config
-
-
-def __get_arguments() -> Path:
-    parser = argparse.ArgumentParser(
-        description="A happy Kostadin is a good Kostadin",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument(
-        "dominant_path",
-        type=str,
-        help="Get the path to the files you want to check for line endings",
-        nargs="?",
-        default="",
-    )
-    parser.add_argument(
-        "-p",
-        "--path",
-        type=str,
-        default="",
-    )
-    args = parser.parse_args()
-    config = vars(args)
-    if config.get("dominant_path"):
-        path = Path(config["dominant_path"]).absolute()
-    elif config.get("path"):
-        path = Path(config["path"]).absolute()
-    else:
-        path = Path.cwd().absolute()
-    return path
-
-
-def main(return_checked_files: bool = False) -> Union[list, None]:
-    """Will raise a ValueError if any of the files contain CRLF line endings.
-
-    :param return_checked_files: Return all the files tested, defaults to False
-    :type return_checked_files: bool, optional
-    :raises ValueError: If any of the files contain CRLF line endings
-    :return: all the files that are checked or None
-    :rtype: Union[list, None]
-    """
-    path = __get_arguments()
-    config = parse_pyproject_toml()
-    allowed_post_fixes = tuple(config.get("allowed_post_fixes", []))
-    print(f"checking for CRLF in {path}")
-
+def get_all_files(config: Config) -> list:
     all_files = []
-    for root, _, files in os.walk(path):
+    allowed_post_fixes = tuple(config.allowed_post_fixes)
+    for root, _, files in os.walk(config.path):
         for file in files:
             file_path = os.path.join(root, file)
             if len(allowed_post_fixes) > 0:
                 if not file_path.endswith(allowed_post_fixes):
                     continue
             all_files.append(Path(file_path))
+    return all_files
+
+
+def main() -> None:
+    """Will check all the files for CRLF line endings.
+    If the file contains CRLF line endings, it will be replaced with LF line endings.
+    If the --fix flag is set, it will fix the line endings.
+    If the --fix flag is not set, it will print the files that contain CRLF line endings.
+    And, it will raise a sys.exit(1) if any of the files contain CRLF line endings.
+
+    :raises a: sys.exit(1) if any of the files contain CRLF line endings and --fix flag is not set
+    :return: None
+    """    
+    config = get_config()
+    print(f"checking for CRLF in {config.path}")
+
+    all_files = get_all_files(config)
 
     # Usage example
     files_containing_crlf = []
     for file in tqdm(all_files):
         content = open(file, "rb").read()
         if b"\r\n" in content:
-            file_name = str(file).replace(str(path), "")
-            files_containing_crlf.append(file_name)
+            if config.fix:
+                content = content.replace(b"\r\n", b"\n")
+                with open(file, "wb") as f:
+                    f.write(content)
+            else:
+                file_name = str(file).replace(str(config.path), "")
+                files_containing_crlf.append(file_name)
 
     if files_containing_crlf:
         for file in files_containing_crlf:
@@ -99,10 +54,7 @@ def main(return_checked_files: bool = False) -> Union[list, None]:
         print(f"Error: {len(files_containing_crlf)} files contain CRLF line ending.")
         sys.exit(1)
     else:
-        print("+=+=+ - All files are free from CRLF - +=+=+")
-
-    if return_checked_files:
-        return all_files
+        print("+=+=+ - You did it tiger! You are free from CRLF - +=+=+")
 
 
 if __name__ == "__main__":

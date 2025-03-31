@@ -1,5 +1,11 @@
 # History
 
+## 0.1.0 (2025-03-27)
+- Add the flag `--fix` for allowing happy_kostadin to change the files
+- Increase testing of functions by separating and unit testing them
+- Remove test argument `return_checked_files` from `main()`
+- Reduce Cyclomatic Complexity from 3.25 to 2.19
+
 ## 0.0.6 (2025-02-20)
 - Update minimum python requirement to =>3.9, <=3.13
 - Make it possible to add path with flag. So `happy_kostadin path/to/code` will now work
