@@ -14,6 +14,14 @@ class Config:
 
 
 def get_config() -> Config:
+    """Get the config for the script.
+    This will get the config from the command line and the pyproject.toml file.
+
+    :return: Config.allowed_post_fixes (list[str]) - The allowed post fixes
+    :return: Config.path (pathlib.Path) - The path to the files you want to check for line endings
+    :return: Config.fix (bool) - Whether to fix the line endings or not
+    :rtype: Config
+    """    
     args = get_arguments()
     toml_values = parse_pyproject_toml()
     return Config(

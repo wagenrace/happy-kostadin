@@ -21,10 +21,15 @@ def get_all_files(config: Config) -> list:
 
 
 def main() -> None:
-    """Will raise a ValueError if any of the files contain CRLF line endings.
+    """Will check all the files for CRLF line endings.
+    If the file contains CRLF line endings, it will be replaced with LF line endings.
+    If the --fix flag is set, it will fix the line endings.
+    If the --fix flag is not set, it will print the files that contain CRLF line endings.
+    And, it will raise a sys.exit(1) if any of the files contain CRLF line endings.
 
-    :raises ValueError: If any of the files contain CRLF line endings
-    """
+    :raises a: sys.exit(1) if any of the files contain CRLF line endings and --fix flag is not set
+    :return: None
+    """    
     config = get_config()
     print(f"checking for CRLF in {config.path}")
 

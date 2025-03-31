@@ -22,9 +22,13 @@ class TomlValues:
 
 
 def parse_pyproject_toml() -> TomlValues:
-    """Parse a pyproject toml file, pulling out relevant parts for Black.
+    """Get the parameters from the pyproject.toml file.
+    This will return the parameters as a dataclass.
+    If the file does not exist, it will return an empty dataclass.
 
-    If parsing fails, will raise a tomllib.TOMLDecodeError.
+    :raises a: tomllib.TOMLDecodeError if parsing fails
+    :return: TomlValues.allowed_post_fixes (list[str]) - The allowed post fixes
+    :rtype: TomlValues
     """
     path_pyproject_toml = Path.cwd() / "pyproject.toml"
     if not path_pyproject_toml.exists():

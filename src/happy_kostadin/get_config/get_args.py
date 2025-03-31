@@ -10,6 +10,13 @@ class Args:
 
 
 def get_arguments() -> Args:
+    """Get the arguments from the command line.
+    Cleans them up and returns them as a dataclass.
+
+    :return: Args.path (pathlib.Path) - The path to the files you want to check for line endings
+    :return: Args.fix (bool) - Whether to fix the line endings or not
+    :rtype: Args
+    """    
     parser = argparse.ArgumentParser(
         description="A happy Kostadin is a good Kostadin",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
