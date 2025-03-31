@@ -32,7 +32,7 @@ def parse_pyproject_toml() -> TomlValues:
     """
     path_pyproject_toml = Path.cwd() / "pyproject.toml"
     if not path_pyproject_toml.exists():
-        return {}
+        return TomlValues(allowed_post_fixes=[])
     with open(path_pyproject_toml, "rb") as f:
         pyproject_toml = tomllib.load(f)
     raw_config: Dict[str, Any] = pyproject_toml.get("tool", {}).get(
