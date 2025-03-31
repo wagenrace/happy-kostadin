@@ -1,7 +1,6 @@
 import os
 import sys
 from pathlib import Path
-from typing import Union
 
 from tqdm import tqdm
 
@@ -19,12 +18,10 @@ def get_all_files(config: Config) -> list:
             all_files.append(Path(file_path))
     return all_files
 
-def main() -> Union[list, None]:
+def main() -> None:
     """Will raise a ValueError if any of the files contain CRLF line endings.
 
     :raises ValueError: If any of the files contain CRLF line endings
-    :return: all the files that are checked or None
-    :rtype: Union[list, None]
     """
     config = get_config()
     print(f"checking for CRLF in {config.path}")
@@ -40,7 +37,6 @@ def main() -> Union[list, None]:
                 content = content.replace(b"\r\n", b"\n")
                 with open(file, "wb") as f:
                     f.write(content)
-                continue
             else:
                 file_name = str(file).replace(str(config.path), "")
                 files_containing_crlf.append(file_name)
@@ -51,7 +47,7 @@ def main() -> Union[list, None]:
         print(f"Error: {len(files_containing_crlf)} files contain CRLF line ending.")
         sys.exit(1)
     else:
-        print("+=+=+ - All files are free from CRLF - +=+=+")
+        print("+=+=+ - You did it tiger! You are free from CRLF - +=+=+")
 
 
 if __name__ == "__main__":
