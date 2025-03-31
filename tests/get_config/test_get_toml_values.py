@@ -22,7 +22,8 @@ def test_parse_pyproject_toml_no_file(mock_pyproject_toml):
     """Test when pyproject.toml does not exist."""
     with mock.patch("pathlib.Path.cwd", return_value=mock_pyproject_toml.parent):
         result = parse_pyproject_toml()
-        assert result == {}
+        expected = TomlValues(allowed_post_fixes=[])
+        assert result == expected
 
 
 def test_parse_pyproject_toml_empty_file(mock_pyproject_toml):
