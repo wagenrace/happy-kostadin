@@ -1,7 +1,7 @@
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List
-from dataclasses import dataclass
 
 # This needs to stay here till Python 3.10 is deprecated (October 2026)
 # https://peps.python.org/pep-0619/
@@ -14,6 +14,7 @@ if sys.version_info >= (3, 11):
             import tomli as tomllib
 else:
     import tomli as tomllib
+
 
 @dataclass
 class TomlValues:
@@ -30,8 +31,12 @@ def parse_pyproject_toml() -> TomlValues:
         return {}
     with open(path_pyproject_toml, "rb") as f:
         pyproject_toml = tomllib.load(f)
-    raw_config: Dict[str, Any] = pyproject_toml.get("tool", {}).get("happy_kostadin", {})
-    raw_config = {k.replace("--", "").replace("-", "_"): v for k, v in raw_config.items()}
+    raw_config: Dict[str, Any] = pyproject_toml.get("tool", {}).get(
+        "happy_kostadin", {}
+    )
+    raw_config = {
+        k.replace("--", "").replace("-", "_"): v for k, v in raw_config.items()
+    }
 
     config = TomlValues(allowed_post_fixes=raw_config.get("allowed_post_fixes", []))
     return config

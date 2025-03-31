@@ -1,6 +1,7 @@
+from pathlib import Path
+
 from src.happy_kostadin.cli import get_all_files
 from src.happy_kostadin.get_config.get_config import Config
-from pathlib import Path
 
 
 def test_get_all_lf_files_all_files():
@@ -30,6 +31,7 @@ def test_get_all_lf_files_only_txt():
         ]
     )
 
+
 def test_get_all_files_subfolder():
     config = Config(
         path=Path(__file__).absolute().parent / Path("test_data_mix"),
@@ -39,7 +41,8 @@ def test_get_all_files_subfolder():
     assert set(all_files) == set(
         [
             Path(__file__).absolute().parent / Path("test_data_mix/file_lf.txt"),
-            Path(__file__).absolute().parent / Path("test_data_mix/sub_folder/file_crlf.tom"),
+            Path(__file__).absolute().parent
+            / Path("test_data_mix/sub_folder/file_crlf.tom"),
         ]
     )
 
@@ -80,7 +83,5 @@ def test_get_all_files_subfolder_only_txt():
     )
     all_files = get_all_files(config)
     assert set(all_files) == set(
-        [
-            Path(__file__).absolute().parent / Path("test_data_mix/file_lf.txt")
-        ]
+        [Path(__file__).absolute().parent / Path("test_data_mix/file_lf.txt")]
     )

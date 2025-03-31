@@ -4,7 +4,8 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from .get_config.get_config import get_config, Config
+from .get_config.get_config import Config, get_config
+
 
 def get_all_files(config: Config) -> list:
     all_files = []
@@ -17,6 +18,7 @@ def get_all_files(config: Config) -> list:
                     continue
             all_files.append(Path(file_path))
     return all_files
+
 
 def main() -> None:
     """Will raise a ValueError if any of the files contain CRLF line endings.

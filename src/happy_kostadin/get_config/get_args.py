@@ -27,11 +27,7 @@ def get_arguments() -> Args:
         type=str,
         default="",
     )
-    parser.add_argument(
-        "-f",
-        "--fix",
-        action='store_true'
-    )
+    parser.add_argument("-f", "--fix", action="store_true")
     args = parser.parse_args()
     config = vars(args)
     if config.get("dominant_path"):

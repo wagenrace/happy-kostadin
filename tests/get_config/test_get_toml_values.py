@@ -1,7 +1,7 @@
+import tomllib
 from unittest import mock
 
 import pytest
-import tomllib
 
 from src.happy_kostadin.get_config.get_toml_values import (
     TomlValues,
