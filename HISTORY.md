@@ -1,5 +1,8 @@
 # History
 
+## 0.1.1 (2025-10-15)
+- Bugfix: some metadata license said MIT not Apache-2.0
+
 ## 0.1.0 (2025-03-27)
 - Add the flag `--fix` for allowing happy_kostadin to change the files
 - Increase testing of functions by separating and unit testing them
